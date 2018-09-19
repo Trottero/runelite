@@ -479,6 +479,10 @@ public interface RSClient extends RSGameEngine, Client
 	@Override
 	int getMouseIdleTicks();
 
+	@Import("mouseLastPressedTimeMillis")
+	@Override
+	long getMouseLastPressedMillis();
+
 	@Import("keyboardIdleTicks")
 	@Override
 	int getKeyboardIdleTicks();
@@ -687,4 +691,7 @@ public interface RSClient extends RSGameEngine, Client
 	@Import("menuAction")
 	@Protect
 	void menuAction(int var0, int var1, int var2, int var3, String var4, String var5, int var6, int var7);
+
+	@Import("occupiedTilesTick")
+	int[][] getOccupiedTilesTick();
 }

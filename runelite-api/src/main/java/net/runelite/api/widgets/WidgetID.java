@@ -53,6 +53,7 @@ public class WidgetID
 	public static final int EMOTES_GROUP_ID = 216;
 	public static final int RUNE_POUCH_GROUP_ID = 190;
 	public static final int DIARY_GROUP_ID = 259;
+	public static final int PEST_CONTROL_BOAT_GROUP_ID = 407;
 	public static final int PEST_CONTROL_GROUP_ID = 408;
 	public static final int CLAN_CHAT_GROUP_ID = 7;
 	public static final int MINIMAP_GROUP_ID = 160;
@@ -107,19 +108,23 @@ public class WidgetID
 	public static final int DESTROY_ITEM_GROUP_ID = 584;
 	public static final int VARROCK_MUSEUM_QUIZ_GROUP_ID = 533;
 	public static final int KILL_LOGS_GROUP_ID = 549;
-	public static final int DIARY_QUEST_GROUP_ID = 275;
+	public static final int DIARY_QUEST_GROUP_ID = 119;
 	public static final int THEATRE_OF_BLOOD_GROUP_ID = 23;
 	public static final int WORLD_SWITCHER_GROUP_ID = 69;
 	public static final int DIALOG_OPTION_GROUP_ID = 219;
 	public static final int DIALOG_PLAYER_GROUP_ID = 217;
 	public static final int FOSSIL_ISLAND_OXYGENBAR_ID = 609;
+	public static final int MINIGAME_TAB_ID = 76;
+	public static final int SPELLBOOK_GROUP_ID = 218;
 
 	static class WorldMap
 	{
-		static final int OPTION = 42;
-		static final int TOOLTIP = 35;
 		static final int MAPVIEW = 3;
+		static final int OVERVIEW_MAP = 6;
 		static final int SEARCH = 21;
+		static final int SURFACE_SELECTOR = 29;
+		static final int TOOLTIP = 35;
+		static final int OPTION = 42;
 	}
 
 	static class SlayerRewards
@@ -141,8 +146,15 @@ public class WidgetID
 		static final int LOGOUT_BUTTON = 6;
 	}
 
+	static class PestControlBoat
+	{
+		static final int INFO = 3;
+	}
+
 	static class PestControl
 	{
+		static final int INFO = 3;
+
 		static final int ACTIVITY_BAR = 12;
 		static final int ACTIVITY_PROGRESS = 14;
 
@@ -494,17 +506,21 @@ public class WidgetID
 	{
 		static class ATK
 		{
-			static final int CORRECT_STYLE2 = 4;
-			static final int TO_CALL = 6;
-			static final int ROLE = 8;
-			static final int ROLE_SPRITE = 7;
+			static final int CALL_TEXT = 8;
+			static final int TO_CALL_WIDGET = 9;
+			static final int TO_CALL = 10;
+			static final int ROLE_SPRITE = 11;
+			static final int ROLE = 12;
 		}
-
-		static final int CURRENT_WAVE = 1;
 		static final int CORRECT_STYLE = 3;
-		static final int TO_CALL = 5;
-		static final int ROLE_SPRITE = 6;
-		static final int ROLE = 7;
+		static final int CURRENT_WAVE_WIDGET = 4;
+		static final int CURRENT_WAVE = 5;
+		static final int CALL_WIDGET = 6;
+		static final int CALL_TEXT = 7;
+		static final int TO_CALL_WIDGET = 8;
+		static final int TO_CALL = 9;
+		static final int ROLE_SPRITE = 10;
+		static final int ROLE = 11;
 	}
 
 	static class LevelUp
@@ -601,13 +617,7 @@ public class WidgetID
 	static class Diary
 	{
 		static final int DIARY_TITLE = 2;
-		static final int DIARY_TEXT = 1;
-	}
-
-	static class MTA
-	{
-		static final int BONUS_COMPONENT = 7;
-		static final int BONUS_TEXT_COMPONENT = 12;
+		static final int DIARY_TEXT = 3;
 	}
 
 	static class DestroyItem
@@ -641,5 +651,30 @@ public class WidgetID
 	static class FossilOxygen
 	{
 		static final int FOSSIL_ISLAND_OXYGEN_BAR = 4;
+	}
+
+	static class Minigames
+	{
+		static final int TELEPORT_BUTTON = 29;
+	}
+
+	static class StandardSpellBook
+	{
+		static final int LUMBRIDGE_HOME_TELEPORT = 1;
+	}
+
+	static class AncientSpellBook
+	{
+		static final int EDGEVILLE_HOME_TELEPORT = 97;
+	}
+
+	static class LunarSpellBook
+	{
+		static final int LUNAR_HOME_TELEPORT = 99;
+	}
+
+	static class ArceuusSpellBook
+	{
+		static final int ARCEUUS_HOME_TELEPORT = 145;
 	}
 }
