@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2018, Robbie McLeod <https://github.com/rbbi>
+ * Copyright (c) 2018, terminatusx <jbfleischman@gmail.com>
+ * Copyright (c) 2018, Adam <Adam@sigterm.info>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -22,17 +23,23 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+package net.runelite.client.plugins.wintertodt;
 
-package net.runelite.client.plugins.skillcalculator;
-
-import javax.swing.JCheckBox;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.Setter;
-import net.runelite.client.plugins.skillcalculator.beans.SkillDataBonus;
 
-class BonusCheckBox extends JCheckBox
+@AllArgsConstructor
+@Getter
+enum WintertodtInterruptType
 {
-	@Getter
-	@Setter
-	private SkillDataBonus bonus;
+	COLD("Damaged by Wintertodt Cold"),
+	SNOWFALL("Damaged by Wintertodt Snowfall"),
+	BRAZIER("Brazier Shattered"),
+	INVENTORY_FULL("Inventory full of Bruma Roots"),
+	OUT_OF_ROOTS("Out of Bruma Roots"),
+	FIXED_BRAZIER("Fixed Brazier"),
+	LIT_BRAZIER("Lit Brazier"),
+	BRAZIER_WENT_OUT("Brazier went out");
+
+	private final String interruptSourceString;
 }
