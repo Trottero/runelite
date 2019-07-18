@@ -38,7 +38,6 @@ import java.util.Arrays;
 import java.util.List;
 import javax.inject.Inject;
 import lombok.Getter;
-import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Client;
 import net.runelite.api.Constants;
 import net.runelite.api.ItemID;
@@ -62,7 +61,6 @@ import net.runelite.client.ui.overlay.OverlayManager;
 import net.runelite.client.ui.overlay.infobox.InfoBoxManager;
 import net.runelite.client.util.WildcardMatcher;
 
-@Slf4j
 @PluginDescriptor(
 	name = "NPC Aggression Timer",
 	description = "Highlights the unaggressive area of NPCs nearby and timer until it becomes active",
@@ -141,6 +139,7 @@ public class NpcAggroAreaPlugin extends Plugin
 		overlayManager.add(overlay);
 		overlayManager.add(notWorkingOverlay);
 		npcNamePatterns = NAME_SPLITTER.splitToList(config.npcNamePatterns());
+		recheckActive();
 	}
 
 	@Override
@@ -393,7 +392,7 @@ public class NpcAggroAreaPlugin extends Plugin
 		lastPlayerLocation = configManager.getConfiguration(NpcAggroAreaConfig.CONFIG_GROUP, NpcAggroAreaConfig.CONFIG_LOCATION, WorldPoint.class);
 
 		Duration timeLeft = configManager.getConfiguration(NpcAggroAreaConfig.CONFIG_GROUP, NpcAggroAreaConfig.CONFIG_DURATION, Duration.class);
-		if (timeLeft != null)
+		if (timeLeft != null && !timeLeft.isNegative())
 		{
 			createTimer(timeLeft);
 		}

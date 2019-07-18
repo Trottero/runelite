@@ -187,13 +187,14 @@ public class RaidsPlugin extends Plugin
 	@Subscribe
 	public void onChatMessage(ChatMessage event)
 	{
-		if (inRaidChambers && event.getType() == ChatMessageType.CLANCHAT_INFO)
+		if (inRaidChambers && event.getType() == ChatMessageType.FRIENDSCHATNOTIFICATION)
 		{
 			String message = Text.removeTags(event.getMessage());
 
 			if (config.raidsTimer() && message.startsWith(RAID_START_MESSAGE))
 			{
-				timer = new RaidsTimer(spriteManager.getSprite(TAB_QUESTS_BROWN_RAIDING_PARTY, 0), this, Instant.now());
+				timer = new RaidsTimer(this, Instant.now());
+				spriteManager.getSpriteAsync(TAB_QUESTS_BROWN_RAIDING_PARTY, 0, timer);
 				infoBoxManager.addInfoBox(timer);
 			}
 
@@ -235,7 +236,7 @@ public class RaidsPlugin extends Plugin
 						.build();
 
 					chatMessageManager.queue(QueuedMessage.builder()
-						.type(ChatMessageType.CLANCHAT_INFO)
+						.type(ChatMessageType.FRIENDSCHATNOTIFICATION)
 						.runeLiteFormattedMessage(chatMessage)
 						.build());
 				}
@@ -305,7 +306,7 @@ public class RaidsPlugin extends Plugin
 		final String raidData = "[" + layout + "]: " + rooms;
 
 		chatMessageManager.queue(QueuedMessage.builder()
-			.type(ChatMessageType.CLANCHAT_INFO)
+			.type(ChatMessageType.FRIENDSCHATNOTIFICATION)
 			.runeLiteFormattedMessage(new ChatMessageBuilder()
 				.append(ChatColorType.HIGHLIGHT)
 				.append("Layout: ")

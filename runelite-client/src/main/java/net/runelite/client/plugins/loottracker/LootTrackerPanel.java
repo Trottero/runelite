@@ -35,7 +35,7 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import javax.swing.Box;
+import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
@@ -269,7 +269,10 @@ class LootTrackerPanel extends PluginPanel
 		actionsContainer.add(viewControls, BorderLayout.EAST);
 
 		// Create panel that will contain overall data
-		overallPanel.setBorder(new EmptyBorder(8, 10, 8, 10));
+		overallPanel.setBorder(BorderFactory.createCompoundBorder(
+			BorderFactory.createMatteBorder(5, 0, 0, 0, ColorScheme.DARK_GRAY_COLOR),
+			BorderFactory.createEmptyBorder(8, 10, 8, 10)
+		));
 		overallPanel.setBackground(ColorScheme.DARKER_GRAY_COLOR);
 		overallPanel.setLayout(new BorderLayout());
 		overallPanel.setVisible(false);
@@ -314,12 +317,11 @@ class LootTrackerPanel extends PluginPanel
 		// Create loot boxes wrapper
 		logsContainer.setLayout(new BoxLayout(logsContainer, BoxLayout.Y_AXIS));
 		layoutPanel.add(actionsContainer);
-		layoutPanel.add(Box.createRigidArea(new Dimension(0, 5)));
 		layoutPanel.add(overallPanel);
 		layoutPanel.add(logsContainer);
 
 		// Add error pane
-		errorPanel.setContent("Loot trackers", "You have not received any loot yet.");
+		errorPanel.setContent("Loot tracker", "You have not received any loot yet.");
 		add(errorPanel);
 	}
 

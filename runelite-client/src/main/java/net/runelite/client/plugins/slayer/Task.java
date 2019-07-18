@@ -26,7 +26,7 @@
 package net.runelite.client.plugins.slayer;
 
 import com.google.common.base.Preconditions;
-import java.util.HashMap;
+import com.google.common.collect.ImmutableMap;
 import java.util.Map;
 import lombok.Getter;
 import net.runelite.api.ItemID;
@@ -38,7 +38,7 @@ enum Task
 	ABERRANT_SPECTRES("Aberrant spectres", ItemID.ABERRANT_SPECTRE, "Spectre"),
 	ABYSSAL_DEMONS("Abyssal demons", ItemID.ABYSSAL_DEMON),
 	ABYSSAL_SIRE("Abyssal Sire", ItemID.ABYSSAL_ORPHAN),
-	ADAMANT_DRAGONS("Adamant dragons", ItemID.ADAMANTITE_BAR),
+	ADAMANT_DRAGONS("Adamant dragons", ItemID.ADAMANT_DRAGON_MASK),
 	ALCHEMICAL_HYDRA("Alchemical Hydra", ItemID.IKKLE_HYDRA),
 	ANKOU("Ankou", ItemID.ANKOU_MASK),
 	AVIANSIES("Aviansies", ItemID.ENSOULED_AVIANSIE_HEAD),
@@ -107,7 +107,7 @@ enum Task
 	ICEFIENDS("Icefiends", ItemID.ICE_DIAMOND),
 	INFERNAL_MAGES("Infernal mages", ItemID.INFERNAL_MAGE, "Malevolent mage"),
 	IRON_DRAGONS("Iron dragons", ItemID.IRON_DRAGON_MASK),
-	JAD("TzTok-Jad", ItemID.TZREKJAD),
+	JAD("TzTok-Jad", ItemID.TZREKJAD, 25250),
 	JELLIES("Jellies", ItemID.JELLY, "Jelly"),
 	JUNGLE_HORROR("Jungle horrors", ItemID.ENSOULED_HORROR_HEAD),
 	KALPHITE("Kalphite", ItemID.KALPHITE_SOLDIER),
@@ -129,7 +129,7 @@ enum Task
 	MOLANISKS("Molanisks", ItemID.MOLANISK),
 	MONKEYS("Monkeys", ItemID.ENSOULED_MONKEY_HEAD),
 	MOSS_GIANTS("Moss giants", ItemID.HILL_GIANT_CLUB),
-	MUTATED_ZYGOMITES("Mutated zygomites", ItemID.MUTATED_ZYGOMITE, 0, ItemID.FUNGICIDE_SPRAY_0, "Zygomite", "Fungi"),
+	MUTATED_ZYGOMITES("Mutated zygomites", ItemID.MUTATED_ZYGOMITE, 7, ItemID.FUNGICIDE_SPRAY_0, "Zygomite", "Fungi"),
 	NECHRYAEL("Nechryael", ItemID.NECHRYAEL, "Nechryarch"),
 	OGRES("Ogres", ItemID.ENSOULED_OGRE_HEAD),
 	OTHERWORLDLY_BEING("Otherworldly beings", ItemID.GHOSTLY_HOOD),
@@ -137,7 +137,7 @@ enum Task
 	RATS("Rats", ItemID.RATS_TAIL),
 	RED_DRAGONS("Red dragons", ItemID.BABY_RED_DRAGON),
 	ROCKSLUGS("Rockslugs", ItemID.ROCKSLUG, 4, ItemID.BAG_OF_SALT),
-	RUNE_DRAGONS("Rune dragons", ItemID.RUNITE_BAR),
+	RUNE_DRAGONS("Rune dragons", ItemID.RUNE_DRAGON_MASK),
 	SCORPIA("Scorpia", ItemID.SCORPIAS_OFFSPRING),
 	CHAOS_DRUIDS("Chaos druids", ItemID.ELDER_CHAOS_HOOD, "Elder Chaos druid", "Chaos druid"),
 	BANDITS("Bandits", ItemID.BANDIT, "Bandit"),
@@ -171,23 +171,28 @@ enum Task
 	ZILYANA("Commander Zilyana", ItemID.PET_ZILYANA),
 	ZOMBIES("Zombies", ItemID.ZOMBIE_HEAD, "Undead"),
 	ZULRAH("Zulrah", ItemID.PET_SNAKELING),
-	ZUK("TzKal-Zuk", ItemID.TZREKZUK);
+	ZUK("TzKal-Zuk", ItemID.TZREKZUK, 101890);
 	//</editor-fold>
 
-	private static final Map<String, Task> tasks = new HashMap<>();
+	private static final Map<String, Task> tasks;
 
 	private final String name;
 	private final int itemSpriteId;
 	private final String[] targetNames;
 	private final int weaknessThreshold;
 	private final int weaknessItem;
+	private final int expectedKillExp;
 
 	static
 	{
+		ImmutableMap.Builder<String, Task> builder = new ImmutableMap.Builder<>();
+
 		for (Task task : values())
 		{
-			tasks.put(task.getName().toLowerCase(), task);
+			builder.put(task.getName().toLowerCase(), task);
 		}
+
+		tasks = builder.build();
 	}
 
 	Task(String name, int itemSpriteId, String... targetNames)
@@ -198,6 +203,7 @@ enum Task
 		this.weaknessThreshold = -1;
 		this.weaknessItem = -1;
 		this.targetNames = targetNames;
+		this.expectedKillExp = 0;
 	}
 
 	Task(String name, int itemSpriteId, int weaknessThreshold, int weaknessItem, String... targetNames)
@@ -208,6 +214,18 @@ enum Task
 		this.weaknessThreshold = weaknessThreshold;
 		this.weaknessItem = weaknessItem;
 		this.targetNames = targetNames;
+		this.expectedKillExp = 0;
+	}
+
+	Task(String name, int itemSpriteId, int expectedKillExp)
+	{
+		Preconditions.checkArgument(itemSpriteId >= 0);
+		this.name = name;
+		this.itemSpriteId = itemSpriteId;
+		this.weaknessThreshold = -1;
+		this.weaknessItem = -1;
+		this.targetNames = new String[0];
+		this.expectedKillExp = expectedKillExp;
 	}
 
 	static Task getTask(String taskName)

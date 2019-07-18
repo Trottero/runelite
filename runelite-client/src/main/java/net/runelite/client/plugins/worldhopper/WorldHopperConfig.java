@@ -101,4 +101,26 @@ public interface WorldHopperConfig extends Config
 	{
 		return true;
 	}
+
+	@ConfigItem(
+		keyName = "menuOption",
+		name = "Show Hop-to menu option",
+		description = "Adds Hop-to menu option to the friends list and clan members list",
+		position = 6
+	)
+	default boolean menuOption()
+	{
+		return true;
+	}
+
+	@ConfigItem(
+		keyName = "subscriptionFilter",
+		name = "Show subscription types",
+		description = "Only show free worlds, member worlds, or both types of worlds in sidebar",
+		position = 7
+	)
+	default SubscriptionFilterMode subscriptionFilter()
+	{
+		return SubscriptionFilterMode.BOTH;
+	}
 }
