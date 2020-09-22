@@ -32,6 +32,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -41,6 +42,8 @@ import net.runelite.api.Client;
 import net.runelite.api.GameObject;
 import net.runelite.api.MenuAction;
 import net.runelite.api.Player;
+import net.runelite.api.Point;
+import net.runelite.api.coords.WorldPoint;
 import net.runelite.api.events.AnimationChanged;
 import net.runelite.api.events.ChatMessage;
 import net.runelite.api.events.GameObjectChanged;
@@ -62,7 +65,8 @@ import net.runelite.client.ui.overlay.OverlayMenuEntry;
 @PluginDescriptor(
 	name = "Woodcutting",
 	description = "Show woodcutting statistics and/or bird nest notifications",
-	tags = {"birds", "nest", "notifications", "overlay", "skilling", "wc"}
+	tags = {"birds", "nest", "notifications", "overlay", "skilling", "wc"},
+	enabledByDefault = false
 )
 @PluginDependency(XpTrackerPlugin.class)
 @Slf4j
@@ -89,9 +93,11 @@ public class WoodcuttingPlugin extends Plugin
 	private WoodcuttingConfig config;
 
 	@Getter
+	@Nullable
 	private WoodcuttingSession session;
 
 	@Getter
+	@Nullable
 	private Axe axe;
 
 	@Getter
@@ -100,6 +106,7 @@ public class WoodcuttingPlugin extends Plugin
 	@Getter(AccessLevel.PACKAGE)
 	private final List<TreeRespawn> respawns = new ArrayList<>();
 	private boolean recentlyLoggedIn;
+	private int currentPlane;
 
 	@Provides
 	WoodcuttingConfig getConfig(ConfigManager configManager)
@@ -141,16 +148,23 @@ public class WoodcuttingPlugin extends Plugin
 	public void onGameTick(GameTick gameTick)
 	{
 		recentlyLoggedIn = false;
+		currentPlane = client.getPlane();
 
 		respawns.removeIf(TreeRespawn::isExpired);
 
-		if (session == null || session.getLastLogCut() == null)
+		if (session == null || session.getLastChopping() == null)
 		{
 			return;
 		}
 
+		if (axe != null && axe.matchesChoppingAnimation(client.getLocalPlayer()))
+		{
+			session.setLastChopping();
+			return;
+		}
+
 		Duration statTimeout = Duration.ofMinutes(config.statTimeout());
-		Duration sinceCut = Duration.between(session.getLastLogCut(), Instant.now());
+		Duration sinceCut = Duration.between(session.getLastChopping(), Instant.now());
 
 		if (sinceCut.compareTo(statTimeout) >= 0)
 		{
@@ -171,7 +185,7 @@ public class WoodcuttingPlugin extends Plugin
 					session = new WoodcuttingSession();
 				}
 
-				session.setLastLogCut();
+				session.setLastChopping();
 			}
 
 			if (event.getMessage().contains("A bird's nest falls out of the tree") && config.showNestNotification())
@@ -201,10 +215,16 @@ public class WoodcuttingPlugin extends Plugin
 		Tree tree = Tree.findTree(object.getId());
 		if (tree != null)
 		{
-			if (tree.getRespawnTime() != null && !recentlyLoggedIn)
+			if (tree.getRespawnTime() != null && !recentlyLoggedIn && currentPlane == object.getPlane())
 			{
+				Point max = object.getSceneMaxLocation();
+				Point min = object.getSceneMinLocation();
+				int lenX = max.getX() - min.getX();
+				int lenY = max.getY() - min.getY();
 				log.debug("Adding respawn timer for {} tree at {}", tree, object.getLocalLocation());
-				TreeRespawn treeRespawn = new TreeRespawn(tree, object.getLocalLocation(), Instant.now(), (int) tree.getRespawnTime().toMillis());
+
+				final int region = client.getLocalPlayer().getWorldLocation().getRegionID();
+				TreeRespawn treeRespawn = new TreeRespawn(tree, lenX, lenY, WorldPoint.fromScene(client, min.getX(), min.getY(), client.getPlane()), Instant.now(), (int) tree.getRespawnTime(region).toMillis());
 				respawns.add(treeRespawn);
 			}
 
@@ -226,9 +246,9 @@ public class WoodcuttingPlugin extends Plugin
 	{
 		switch (event.getGameState())
 		{
-			case LOADING:
 			case HOPPING:
 				respawns.clear();
+			case LOADING:
 				treeObjects.clear();
 				break;
 			case LOGGED_IN:

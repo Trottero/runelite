@@ -30,8 +30,13 @@ import com.google.inject.testing.fieldbinder.Bind;
 import com.google.inject.testing.fieldbinder.BoundFieldModule;
 import java.util.concurrent.ScheduledExecutorService;
 import net.runelite.api.Client;
+import net.runelite.client.Notifier;
 import net.runelite.client.config.ChatColorConfig;
 import net.runelite.client.config.RuneLiteConfig;
+import net.runelite.client.ui.overlay.OverlayManager;
+import net.runelite.client.util.ImageCapture;
+import net.runelite.client.ws.PartyService;
+import net.runelite.http.api.chat.ChatClient;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import org.junit.Before;
@@ -63,10 +68,30 @@ public class RaidsPluginTest
 
 	@Mock
 	@Bind
+	ImageCapture imageCapture;
+
+	@Mock
+	@Bind
+	Notifier notifier;
+
+	@Mock
+	@Bind
+	ChatClient chatClient;
+
+	@Mock
+	@Bind
 	RaidsConfig raidsConfig;
 
 	@Inject
 	RaidsPlugin raidsPlugin;
+
+	@Mock
+	@Bind
+	private PartyService partyService;
+
+	@Mock
+	@Bind
+	private OverlayManager overlayManager;
 
 	@Before
 	public void before()
